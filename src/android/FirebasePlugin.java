@@ -1719,8 +1719,12 @@ public class FirebasePlugin extends CordovaPlugin {
         });
     }
 
-    private boolean isCrashlyticsEnabled(){
-        return getPreference(CRASHLYTICS_COLLECTION_ENABLED);
+    private boolean isCrashlyticsEnabled() {
+        try {
+            return getPreference(CRASHLYTICS_COLLECTION_ENABLED);
+        } catch (Exception e) {
+            handleExceptionWithoutContext(e);
+        }
     }
 
     public void clearAllNotifications(final CallbackContext callbackContext) {
@@ -2227,7 +2231,9 @@ public class FirebasePlugin extends CordovaPlugin {
     protected static void handleExceptionWithContext(Exception e, CallbackContext context) {
         String msg = e.toString();
         Log.e(TAG, msg);
-        instance.logExceptionToCrashlytics(e);
+        if (instance != null) {
+            instance.logExceptionToCrashlytics(e);
+        }
         context.error(msg);
     }
 
