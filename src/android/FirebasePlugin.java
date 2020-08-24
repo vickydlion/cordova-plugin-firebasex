@@ -1720,11 +1720,17 @@ public class FirebasePlugin extends CordovaPlugin {
     }
 
     private boolean isCrashlyticsEnabled() {
+        boolean isEnabled = false;
         try {
-            return getPreference(CRASHLYTICS_COLLECTION_ENABLED);
+            if (getMetaDataFromManifest(CRASHLYTICS_COLLECTION_ENABLED)) {
+                isEnabled = true;
+            } else {
+                isEnabled = getPreference(CRASHLYTICS_COLLECTION_ENABLED);
+            }
         } catch (Exception e) {
-            handleExceptionWithoutContext(e);
+            Log.e(TAG, e.getMessage());
         }
+        return isEnabled;
     }
 
     public void clearAllNotifications(final CallbackContext callbackContext) {
